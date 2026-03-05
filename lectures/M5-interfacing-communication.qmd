@@ -1,0 +1,23 @@
+---
+title: "Interfacing and Communication"
+subtitle: "Module 5 — BCSE205L"
+author: "Justus Raju"
+date: last-modified
+---
+
+## Outline
+
+::: {.incremental}
+- I/O fundamentals: handshaking, buffering, I/O modules
+- Programmed I/O
+- Interrupt-driven I/O
+- Direct Memory Access (DMA) and Direct Cache Access
+- Interrupt structures: vectored and prioritized
+- Interrupt overhead
+- Buses: synchronous and asynchronous
+- Bus arbitration
+:::
+
+::: {.notes}
+This module covers the fundamentals of I/O interfacing, the different techniques for data transfer between the processor and peripherals, interrupt handling mechanisms, and bus communication protocols.
+:::

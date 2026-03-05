@@ -1,0 +1,23 @@
+---
+title: "High Performance Processors"
+subtitle: "Module 7 — BCSE205L"
+author: "Justus Raju"
+date: last-modified
+---
+
+## Outline
+
+::: {.incremental}
+- Flynn's taxonomy: SISD, SIMD, MISD, MIMD
+- Pipelining: two-stage and multi-stage
+- Pipeline performance issues and hazards
+- Methods to prevent and resolve hazards
+- Approaches to deal with branches
+- Superscalar architecture
+- Superscalar vs. superpipeline architecture
+- Performance evaluation: Amdahl's law, speed-up, efficiency
+:::
+
+::: {.notes}
+This module explores parallel processing architectures, pipelining techniques and their hazards, superscalar design, and performance evaluation methods for parallel processors including Amdahl's law.
+:::

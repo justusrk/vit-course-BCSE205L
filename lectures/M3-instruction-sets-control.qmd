@@ -1,0 +1,23 @@
+---
+title: "Instruction Sets and Control Unit"
+subtitle: "Module 3 — BCSE205L"
+author: "Justus Raju"
+date: last-modified
+---
+
+## Outline
+
+::: {.incremental}
+- Instruction sets and Instruction Set Architecture
+- Instruction formats and categories
+- Addressing modes
+- Phases of instruction cycle
+- ALU design
+- Data path and control unit
+- Hardwired vs. Microprogrammed control unit
+- Performance metrics: Execution time, MIPS, MFLOPS
+:::
+
+::: {.notes}
+This module covers the instruction set architecture, addressing modes, the phases of instruction execution, and the design of the control unit — both hardwired and microprogrammed approaches. Performance metrics for evaluating machine capabilities are also introduced.
+:::

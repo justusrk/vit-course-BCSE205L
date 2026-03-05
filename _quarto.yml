@@ -1,0 +1,25 @@
+project:
+  type: default
+  output-dir: _output
+  render:
+    - lectures/*.qmd
+    - labs/*.qmd
+    - assignments/*.qmd
+
+format:
+  revealjs:
+    theme: [default, theme.scss]
+    width: 1280
+    height: 720
+    transition: fade
+    slide-number: true
+    hash-type: number
+    center: false
+    footer: "BCSE205L — Computer Architecture and Organization | VIT"
+    highlight-style: github-dark
+    code-overflow: wrap
+    code-line-numbers: false
+
+execute:
+  echo: true
+  warning: false

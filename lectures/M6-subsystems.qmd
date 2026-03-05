@@ -1,0 +1,23 @@
+---
+title: "Subsystems"
+subtitle: "Module 6 — BCSE205L"
+author: "Justus Raju"
+date: last-modified
+---
+
+## Outline
+
+::: {.incremental}
+- External storage systems: solid state drives
+- Organization and structure of disk drives
+- Electronic, magnetic, and optical technologies
+- Reliability of memory systems
+- Error detecting and error correcting systems
+- Hamming code
+- RAID levels
+- I/O performance
+:::
+
+::: {.notes}
+This module covers external storage systems, disk drive organization, error detection and correction mechanisms including Hamming codes, RAID configurations, and I/O performance evaluation.
+:::

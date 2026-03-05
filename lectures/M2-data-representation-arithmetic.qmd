@@ -1,0 +1,22 @@
+---
+title: "Data Representation and Computer Arithmetic"
+subtitle: "Module 2 — BCSE205L"
+author: "Justus Raju"
+date: last-modified
+---
+
+## Outline
+
+::: {.incremental}
+- Fixed point arithmetic operations
+- Booth's multiplication algorithm
+- Modified Booth's algorithm
+- Restoring division
+- Non-restoring division
+- Floating point arithmetic operations
+- Representation of nonnumeric data (character codes)
+:::
+
+::: {.notes}
+This module covers how data is represented in binary and the hardware algorithms used for arithmetic operations in a typical computer, including multiplication and division algorithms for both fixed and floating point numbers.
+:::

@@ -1,0 +1,23 @@
+---
+title: "Introduction to Computer Architecture and Organization"
+subtitle: "Module 1 — BCSE205L"
+author: "Justus Raju"
+date: last-modified
+---
+
+## Outline
+
+::: {.incremental}
+- Overview of Organization and Architecture
+- Functional components of a computer
+- Registers and register files
+- Interconnection of components
+- Overview of IAS computer function
+- Organization of the von Neumann machine
+- Harvard architecture
+- CISC & RISC Architectures
+:::
+
+::: {.notes}
+This module introduces the fundamental concepts of computer architecture and organization, covering the key building blocks and architectural styles that underpin modern computing systems.
+:::

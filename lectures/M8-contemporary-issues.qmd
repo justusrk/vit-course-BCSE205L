@@ -1,0 +1,17 @@
+---
+title: "Contemporary Issues"
+subtitle: "Module 8 — BCSE205L"
+author: "Justus Raju"
+date: last-modified
+---
+
+## Outline
+
+::: {.incremental}
+- Current trends in computer architecture
+- Emerging technologies and paradigms
+:::
+
+::: {.notes}
+This module covers contemporary issues and emerging trends in computer architecture and organization.
+:::
