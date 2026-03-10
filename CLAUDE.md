@@ -31,6 +31,21 @@ Slides should follow this 8-module structure:
 
 **Primary textbook:** Patterson, Hennessy — *Computer Organization and Design: The Hardware/Software Interface* (6th ed., Morgan Kaufmann, 2020).
 
+**Reference books:**
+
+1. William Stallings — *Computer Architecture and Organization: Designing for Performance* (10th ed., Pearson, 2016)
+2. Carl Hamacher, Zvonko Vranesic, Safwat Zaky — *Computer Organization* (5th ed., McGraw Hill, 2011)
+
+## RevealJS Internal Slide Links
+
+To link to a specific slide within the same deck:
+
+1. Add a custom ID to the target slide heading: `## Slide Title {#my-id}`
+2. Link to it with: `[Link text](#my-id)` — **no slash** after `#`
+3. `#/my-id` does NOT work; `#my-id` does
+4. Numeric links (`#2`) also work but break when slides are reordered
+5. To hide the title slide, use `title-slide-attributes: data-visibility: "hidden"` in YAML
+
 ## Slide Conventions
 
 - Use `format: revealjs` in the YAML front matter

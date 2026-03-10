@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Sora:wght@400;600;700;800&display=swap');
+
+body {
+  font-family: "DM Sans", system-ui, sans-serif;
+  background: #fafaf9;
+  color: #292524;
+}
+
+h1, h2, h3 {
+  font-family: "Sora", system-ui, sans-serif;
+  color: #0c0a09;
+}
+
+h2 {
+  border-bottom: 3px solid #0f766e;
+  padding-bottom: 0.3em;
+  display: inline-block;
+}
+
+a {
+  color: #0f766e;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #14b8a6;
+  text-decoration: underline;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  border-bottom: 2px solid #0f766e;
+}
+
+th {
+  font-family: "Sora", sans-serif;
+  font-weight: 600;
+  padding: 0.6em 0.8em;
+  text-align: left;
+}
+
+tbody tr {
+  border-bottom: 1px solid #e7e5e4;
+}
+
+td {
+  padding: 0.6em 0.8em;
+  color: #44403c;
+}

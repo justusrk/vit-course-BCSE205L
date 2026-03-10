@@ -1,0 +1,60 @@
+---
+format:
+  revealjs:
+    hash-type: number
+    scrollable: true
+    title-slide-attributes:
+      data-visibility: "hidden"
+---
+
+## CAT-2 Coverage {.smaller}
+
+| Module | Topics | Marks | Slides | Details |
+|--------|--------|-------|--------|---------|
+| 3 (partial) | Phases of instruction cycle, ALU, Datapath and control unit (Hardwired control unit and Micro programmed control unit), Performance metrics (Execution time calculation, MIPS, MFLOPS) | 10 | [View](M3-instruction-sets-control.html) | [View](#m3) |
+| 4 (full) | Memory systems hierarchy (Characteristics, Byte Storage methods, Conceptual view of memory cell), Design of scalable memory using RAM's and ROM's chips, Construction of larger size memories, Memory Interleaving, Memory interface address map, Cache memory (principles, management techniques, Types of caches, cache misses, Mean memory access time evaluation) | 25 | [View](M4-memory-systems.html) | [View](#m4) |
+| 5 (partial) | I/O fundamentals (handshaking, buffering, I/O Modules), I/O techniques (Programmed I/O, Interrupt-driven I/O, Direct Memory Access) | 15 | [View](M5-interfacing-communication.html) | [View](#m5) |
+
+## Module 3 — Instruction Sets and Control Unit (partial) {#m3}
+From **Phases of instruction cycle** onwards:
+
+::: {.incremental}
+- Phases of instruction cycle
+- ALU
+- Data path and control unit: Hardwired control unit and Micro programmed control unit
+- **Performance metrics**: Execution time calculation, MIPS, MFLOPS
+:::
+
+## Module 4 — Memory System Organization and Architecture (full) {#m4}
+::: {.incremental}
+- Memory systems hierarchy: Characteristics, **Byte Storage methods** (big endian, little endian), Conceptual view of memory cell
+- **Design of scalable memory** using RAM's and ROM's chips
+- Construction of larger size memories
+- **Memory Interleaving**
+- Memory interface address map
+- **Cache memory**: principles, **Cache memory management techniques** (block placement, look through, look aside), Types of caches, cache misses, Mean memory access time evaluation of cache
+- **Replacement algorithms**: FIFO, LRU, Optimal
+:::
+
+## Module 5 — Interfacing and Communication (partial) {#m5}
+Up to **Direct Memory Access**:
+
+::: {.incremental}
+- I/O fundamentals: handshaking, buffering, I/O Modules
+    - ***Asynchronous Data Transfer: Strobe and Handshaking*** ^[Morris Mano, *Computer System Architecture*, Pearson]
+- I/O techniques: Programmed I/O
+- Interrupt-driven I/O
+- **Direct Memory Access**
+:::
+
+## Numerical Section
+
+::: {.incremental}
+- Direct Memory Access
+- Memory design problem
+- Cache memory: block placement, look through, look aside
+- Replacement algorithms: FIFO, LRU, Optimal
+- Performance metrics: Execution time, MIPS, MFLOPS
+- Big endian / Little endian
+- Memory interleaving
+:::

@@ -1,0 +1,38 @@
+---
+title: "BCSE205L — Computer Architecture and Organization"
+format:
+  html:
+    theme: cosmo
+    toc: false
+    page-layout: full
+    css: index.css
+---
+
+## Lectures
+
+<table>
+<thead>
+<tr><th>Module</th><th>Topic</th><th>Slides</th></tr>
+</thead>
+<tbody>
+<!-- <tr><td>1</td><td>Introduction to Computer Architecture and Organization</td><td><a href="lectures/M1-intro-architecture.html">View slides</a></td></tr> -->
+<!-- <tr><td>2</td><td>Data Representation and Computer Arithmetic</td><td><a href="lectures/M2-data-representation-arithmetic.html">View slides</a></td></tr> -->
+<!-- <tr><td>3</td><td>Instruction Sets and Control Unit</td><td><a href="lectures/M3-instruction-sets-control.html">View slides</a></td></tr> -->
+<tr><td>4</td><td>Memory System Organization and Architecture</td><td><a href="lectures/M4-memory-systems.html">View slides</a></td></tr>
+<tr><td>5</td><td>Interfacing and Communication</td><td><a href="lectures/M5-interfacing-communication.html">View slides</a></td></tr>
+<!-- <tr><td>6</td><td>Subsystems</td><td><a href="lectures/M6-subsystems.html">View slides</a></td></tr> -->
+<!-- <tr><td>7</td><td>High Performance Processors</td><td><a href="lectures/M7-high-performance-processors.html">View slides</a></td></tr> -->
+<!-- <tr><td>8</td><td>Contemporary Issues</td><td><a href="lectures/M8-contemporary-issues.html">View slides</a></td></tr> -->
+</tbody>
+</table>
+
+## Exam Syllabus
+
+<table>
+<thead>
+<tr><th>Exam</th><th>Coverage</th><th></th></tr>
+</thead>
+<tbody>
+<tr><td>CAT-2</td><td>Module 3 (Phases of instruction cycle onwards), Module 4 (full), Module 5 (up to DMA)</td><td><a href="lectures/CAT2-syllabus.html">View</a></td></tr>
+</tbody>
+</table>

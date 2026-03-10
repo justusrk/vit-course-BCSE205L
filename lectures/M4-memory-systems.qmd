@@ -456,50 +456,164 @@ $$\text{Required chips} = p \times q, \quad p = \frac{N'}{N}, \quad q = \frac{W'
 
 # Cache Memory
 
-## Cache Memory Principles
+## Cache Memory — Overview
 
-![](../images/cache-principles.png){fig-align="center" width="85%"}
+![](../images/cache-overview.png){fig-align="center" width="85%"}
+
+## Cache Memory Principles
 
 ::: {.incremental}
 - Special **very high-speed memory** used to speed up and synchronize with the CPU
 - Acts as a **buffer between RAM and CPU**
-- Holds **frequently requested data and instructions** for immediate availability
+- Holds **frequently requested data and instructions** so they are immediately available
 - Reduces the **average time** to access data from main memory
-- Costlier than main memory but more economical than CPU registers
+- The cache stores **copies** of data from frequently used main memory locations
 :::
+
+::: {.notes}
+The processor first looks in the cache for a byte of data. If found (cache hit), access is fast. If not (cache miss), the data is fetched from main memory and a copy is placed in the cache for future use.
+:::
+
+## Cache Memory — Advantages & Disadvantages
+
+:::: {.columns}
+::: {.column width="50%"}
+### Advantages
+
+- **Faster** than main memory
+- **Less access time** — close to register speed
+- Bridges the speed gap between CPU and main memory
+:::
+
+::: {.column width="50%"}
+### Disadvantages
+
+- **Expensive** — costs more per bit than DRAM
+- **Limited capacity** — typically KB to a few MB
+- Adds **hardware complexity** for management
+:::
+::::
 
 ## Types of Cache
 
-- **Primary (L1) Cache** — built onto the processor chip, very fast (access time similar to registers), small size, uses SRAM
-- **Secondary (L2) Cache** — external to L1, located between L1 and main memory
+::: {.incremental}
+- **Primary (L1) Cache**
+  - Built **onto the processor chip**
+  - Access time similar to processor registers
+  - Very small size (typically 32–64 KB)
+  - Built using **Static RAM (SRAM)**
+- **Secondary (L2) Cache**
+  - External to the primary cache
+  - Located between L1 cache and main memory
+  - Larger than L1 (typically 256 KB – a few MB)
+  - Also known as **external cache**
+:::
 
 ## Locality of Reference
 
 ::: {.theorem}
-**Locality Principle.** Programs tend to access a relatively small portion of address space at any given time. We can predict future accesses based on recent past accesses.
+**Locality Principle.** Programs tend to access a relatively small portion of address space at any given time. We can predict with reasonable accuracy what instructions and data a program will use in the near future based on its accesses in the recent past.
 :::
 
-- **Temporal locality** — recently accessed items likely to be accessed again soon
-- **Spatial locality** — items near recently accessed items likely to be accessed soon
+::: {.incremental}
+- **Temporal locality** — recently accessed items are likely to be accessed again soon
+- **Spatial locality** — items near recently accessed items are likely to be accessed soon
+:::
+
+::: {.notes}
+Locality is the fundamental reason why caches work. Without locality, caching would provide no benefit. Loops exhibit temporal locality (same instructions repeated). Array traversals exhibit spatial locality (consecutive memory locations).
+:::
 
 ## Locality of Reference — Visual
 
 ![](../images/locality-of-reference.jpg){fig-align="center" width="85%"}
 
-## Cache Mapping Techniques
+## Cache Operation — Hit and Miss
+
+![](../images/cache-principles.png){fig-align="center" width="85%"}
+
+::: {.notes}
+The processor checks the cache first. On a hit, data is returned quickly. On a miss, the block containing the requested word is fetched from main memory into the cache, and then the word is delivered to the processor.
+:::
+
+# Cache Memory Management Techniques
+
+## Overview of Cache Management
+
+Cache management involves four key decisions:
+
+::: {.incremental}
+1. **Block Placement** — where can a block be placed in cache?
+   - Direct Mapping / Fully Associative / Set Associative
+2. **Block Identification** — how do we find a block in cache?
+   - Tag / Index / Offset
+3. **Block Replacement** — which block to evict on a miss?
+   - FIFO / LRU / Optimal
+4. **Update Policies** — how to handle writes?
+   - Write-through / Write-back / Write-around / Write-allocate
+:::
+
+# Block Placement — Mapping Techniques
+
+## Mapping — Terminology
+
+::: {.definition}
+**Blocks and Lines.** In the context of main memory (MM) to cache memory (CM), the unit of transfer is called a **block** (in MM) or a **line** (in cache). Blocks and lines are the same size.
+:::
+
+::: {.incremental}
+- Main memory is divided into **blocks** of fixed size
+- Cache is divided into **lines** (also called cache blocks) of the same size
+- **Mapping** defines the rule for which cache line(s) a given MM block can occupy
+:::
+
+## Mapping — Basics
+
+Consider mapping **64 words** of main memory onto **16 words** of cache:
+
+::: {.incremental}
+- Main memory: 64 words → **16 blocks** of 4 words each
+- Cache memory: 16 words → **4 lines** of 4 words each
+- PA bits needed: $2^6 = 64$ → **6 bits**
+- Block identification: 16 blocks → **4 bits** (upper bits of PA)
+- Word within block: 4 words → **2 bits** (lower bits of PA)
+:::
+
+. . .
+
+```
+Physical Address (6 bits):
+┌────────────────┬──────────────┐
+│  Block Number   │  Word Offset  │
+│   (4 bits)      │   (2 bits)    │
+└────────────────┴──────────────┘
+```
+
+## Three Mapping Techniques
 
 ![](../images/cache-mapping-techniques.png){fig-align="center" width="85%"}
 
-Three mapping strategies:
+::: {.notes}
+Each technique offers a different trade-off between hardware complexity and conflict miss rate. Direct mapping is simplest but most restrictive. Fully associative is most flexible but most expensive. Set-associative is the practical middle ground used in modern processors.
+:::
+
+## Direct Mapping — Concept
+
+::: {.definition}
+**Direct Mapping.** Each block of main memory maps to **exactly one** specific cache line. This is a **many-to-one** relationship.
+:::
+
+$$\text{Cache line number} = (\text{MM Block Address}) \mod (\text{Number of cache lines})$$
 
 ::: {.incremental}
-1. **Direct mapping** — each memory block maps to exactly one cache line
-   - Cache line = (MM Block Address) mod (Number of cache lines)
-2. **Fully associative mapping** — a block can map to **any** cache line
-   - Requires replacement algorithm (FIFO, LRU, Optimal)
-3. **Set-associative mapping** — combination of direct and associative
-   - Cache set = (MM Block Address) mod (Number of sets)
-   - $k$-way: each set has $k$ lines
+- Block 0, 4, 8, 12 → Line 0
+- Block 1, 5, 9, 13 → Line 1
+- Block 2, 6, 10, 14 → Line 2
+- Block 3, 7, 11, 15 → Line 3
+:::
+
+::: {.notes}
+If a line is already occupied by a different block when a new block needs to load, the old block is evicted — no choice. This is the simplest scheme to implement but causes the most conflict misses.
 :::
 
 ## Direct Mapping — Address Format
@@ -511,12 +625,115 @@ Three mapping strategies:
 └───────────┴──────────────────┴──────────────┘
 ```
 
-- PA bits = $N$ where MM size = $2^N$
-- Block/line size = $2^Y$ → offset = $Y$ bits
-- Number of cache lines → index bits
-- Tag = remaining bits
+::: {.incremental}
+- **Physical Address** bits: $N$ where MM size = $2^N$
+- **Word Offset** (Y bits): line size = $2^Y$
+- **Line Number / Index**: number of cache lines = $2^{\text{index bits}}$
+- **Tag**: remaining bits = $N - \text{index bits} - Y$
+:::
 
-## Associative Mapping — Address Format
+## Direct Mapping — How Tag Bits Work
+
+::: {.incremental}
+- Multiple MM blocks map to the **same cache line**
+- The **tag** distinguishes which block currently occupies that line
+- On access: compare the tag from the address with the tag stored in the cache line
+- **Match** → cache hit; **No match** → cache miss
+:::
+
+::: {.notes}
+Think of it like apartment numbers in a building. The index tells you which apartment (cache line) to check. The tag tells you which tenant (MM block) should be living there. If the tenant doesn't match, it's a miss.
+:::
+
+## Direct Mapping — Worked Example
+
+**Given:** MM = 128 words, Cache = 32 words, Block size = 4 words
+
+::: {.incremental}
+- PA bits: $2^7 = 128$ → **7 bits**
+- Number of blocks in MM: $128 / 4 = 32$ → block bits = **5 bits**
+- Word offset: $2^2 = 4$ → **2 bits**
+- Number of cache lines: $32 / 4 = 8$ → index bits = **3 bits**
+- Tag bits: $7 - 3 - 2 =$ **2 bits**
+:::
+
+. . .
+
+```
+PA (7 bits):
+┌──────────┬───────────────┬──────────────┐
+│  Tag (2)  │  Index (3)    │  Offset (2)  │
+└──────────┴───────────────┴──────────────┘
+```
+
+## Direct Mapping — Access Trace
+
+**Given:** 4 cache lines, blocks 0–7 map as: line = block mod 4
+
+Reference string: **0, 2, 4, 0, 6, 2, 0, 4**
+
+| Step | Block | Line | Tag in cache? | Result | Action |
+|:---:|:---:|:---:|:---:|:---:|---|
+| 1 | 0 | 0 | Empty | **Miss** | Load block 0 → line 0 |
+| 2 | 2 | 2 | Empty | **Miss** | Load block 2 → line 2 |
+| 3 | 4 | 0 | Block 0 ≠ 4 | **Miss** | Evict block 0, load block 4 → line 0 |
+| 4 | 0 | 0 | Block 4 ≠ 0 | **Miss** | Evict block 4, load block 0 → line 0 |
+| 5 | 6 | 2 | Block 2 ≠ 6 | **Miss** | Evict block 2, load block 6 → line 2 |
+| 6 | 2 | 2 | Block 6 ≠ 2 | **Miss** | Evict block 6, load block 2 → line 2 |
+| 7 | 0 | 0 | Block 0 = 0 | **Hit** | — |
+| 8 | 4 | 0 | Block 0 ≠ 4 | **Miss** | Evict block 0, load block 4 → line 0 |
+
+Hit ratio = 1/8 = **12.5%** — conflict misses dominate!
+
+::: {.notes}
+This trace clearly shows the problem with direct mapping. Blocks 0 and 4 both map to line 0, so they keep evicting each other (thrashing). Similarly blocks 2 and 6 thrash on line 2. Lines 1 and 3 sit completely empty. This motivates associative and set-associative mapping.
+:::
+
+## Direct Mapping — Tag Directory Size
+
+::: {.definition}
+**Tag Directory Size** = Number of cache lines × (Tag bits + Valid bit + Dirty bit)
+:::
+
+**Example:** MM = 128 words, Cache = 32 words, Block size = 4 words
+
+::: {.incremental}
+- Tag bits = 2 (from earlier example)
+- Number of cache lines = 8
+- Valid bit = 1 per line, Dirty bit = 1 per line (if write-back)
+- **Tag directory** = $8 \times (2 + 1 + 1) = 32$ bits = **4 bytes**
+:::
+
+::: {.notes}
+The tag directory is the overhead — extra storage needed beyond the actual data in the cache. For direct mapping, this overhead is relatively small because tag bits are small. For fully associative, tags are larger so the directory is bigger.
+:::
+
+## Direct Mapping — Drawback
+
+::: {.definition}
+**Conflict Miss (Collision Miss).** Occurs when two or more frequently used blocks map to the **same** cache line, causing repeated evictions even though other cache lines may be empty.
+:::
+
+::: {.incremental}
+- Example: If a program alternates between Block 0 and Block 4, and both map to Line 0, every access is a miss
+- Other cache lines (1, 2, 3) sit empty — wasted capacity
+- This is the main motivation for **associative mapping**
+:::
+
+## Fully Associative Mapping — Concept
+
+::: {.definition}
+**Fully Associative Mapping.** A block of main memory can map to **any** cache line that is freely available. This is a **many-to-many** relationship.
+:::
+
+::: {.incremental}
+- All cache lines are freely available for any block
+- Eliminates conflict misses entirely
+- When all lines are occupied, a **replacement algorithm** must choose which block to evict
+- **Disadvantage:** must search **all** cache lines for every access → expensive comparison hardware
+:::
+
+## Fully Associative — Address Format
 
 ```
 ┌─────────────────────────┬──────────────┐
@@ -525,10 +742,70 @@ Three mapping strategies:
 └─────────────────────────┴──────────────┘
 ```
 
-- No index bits — any block can go to any line
-- Larger tag → more comparison hardware needed
+::: {.incremental}
+- **No index bits** — block can go to any line
+- **Tag** = all block address bits (larger than in direct mapping)
+- **Word offset** = same as before (determined by block size)
+- Tag bits = PA bits − offset bits
+:::
 
-## Set-Associative Mapping — Address Format
+## Fully Associative — Worked Example
+
+**Given:** Cache = 16 KB, Block size = 256 bytes, MM = 128 KB
+
+::: {.incremental}
+- PA bits: $128\text{KB} = 2^{17}$ → **17 bits**
+- Block offset: $256 = 2^8$ → **8 bits**
+- Tag bits: $17 - 8 =$ **9 bits**
+- Number of cache lines: $16\text{KB} / 256 = 64$ lines
+- **Tag directory size** = $64 \times 9 = 576$ bits = **72 bytes**
+:::
+
+. . .
+
+```
+PA (17 bits):
+┌──────────────────┬──────────────┐
+│    Tag (9)        │  Offset (8)  │
+└──────────────────┴──────────────┘
+```
+
+## Fully Associative — Access Trace (LRU)
+
+**Same reference string:** 0, 2, 4, 0, 6, 2, 0, 4 — **4 cache lines**, fully associative, LRU replacement
+
+| Step | Block | Cache State | Result | Action |
+|:---:|:---:|---|:---:|---|
+| 1 | 0 | [**0**, -, -, -] | **Miss** | Load 0 |
+| 2 | 2 | [0, **2**, -, -] | **Miss** | Load 2 |
+| 3 | 4 | [0, 2, **4**, -] | **Miss** | Load 4 |
+| 4 | 0 | [**0**, 2, 4, -] | **Hit** | — (0 moves to MRU) |
+| 5 | 6 | [0, 2, 4, **6**] | **Miss** | Load 6 |
+| 6 | 2 | [0, **2**, 4, 6] | **Hit** | — (2 moves to MRU) |
+| 7 | 0 | [**0**, 2, 4, 6] | **Hit** | — (0 moves to MRU) |
+| 8 | 4 | [0, 2, **4**, 6] | **Hit** | — (4 moves to MRU) |
+
+Hit ratio = 4/8 = **50%** — no conflict misses! (vs. 12.5% with direct mapping)
+
+::: {.notes}
+Compare this to the direct mapping trace with the same reference string: 1 hit vs 4 hits. Fully associative eliminates all conflict misses. Blocks 0 and 4 no longer fight over the same line — they simply use any free line. The cost is more complex hardware for tag comparison.
+:::
+
+## Set-Associative Mapping — Concept
+
+::: {.definition}
+**Set-Associative Mapping.** Cache lines are grouped into **sets**. A block maps to a specific **set** (like direct mapping), but within that set, it can go to **any line** (like associative mapping).
+:::
+
+$$\text{Cache set number} = (\text{MM Block Address}) \mod (\text{Number of sets})$$
+
+::: {.incremental}
+- **$k$-way set associative**: each set contains $k$ cache lines
+- Number of sets = (Total cache lines) / $k$
+- Combines the best of both approaches
+:::
+
+## Set-Associative — Address Format
 
 ```
 ┌───────────┬──────────────────┬──────────────┐
@@ -537,51 +814,497 @@ Three mapping strategies:
 └───────────┴──────────────────┴──────────────┘
 ```
 
-- $k = 1$ → direct mapping
-- $k$ = total cache lines → fully associative
-
-## Cache Miss Types
-
 ::: {.incremental}
-- **Compulsory miss (cold miss)** — first access to a block; unavoidable
-- **Conflict miss (collision miss)** — multiple blocks compete for the same cache line (direct and set-associative)
-- **Capacity miss** — cache is too small to hold all needed blocks
+- **Word offset**: block size = $2^Y$ → $Y$ bits
+- **Set number**: number of sets = $2^S$ → $S$ bits
+- **Tag**: remaining bits = PA − $S$ − $Y$
 :::
 
-## Block Replacement Policies
+## Set-Associative — Special Cases
 
-Used in set-associative and fully associative caches:
-
-::: {.incremental}
-- **FIFO** — replace the block that has been in cache the longest
-- **LRU (Least Recently Used)** — replace the block that has not been used for the longest time
-- **Optimal** — replace the block that will not be used for the longest time in the future (theoretical)
+::: {.theorem}
+**Unifying Principle.** Direct mapping and fully associative mapping are special cases of set-associative mapping.
 :::
 
-## Cache Update Policies
+::: {.incremental}
+- If $k = 1$ → **1-way set associative ≡ Direct mapping**
+  - Each "set" has 1 line → block has no choice of line
+- If $k$ = total number of cache lines → **Fully associative mapping**
+  - Only 1 set → block can go to any line in that single set
+- Typical values: $k = 2, 4, 8, 16$
+:::
 
-| Policy | Trigger | Action |
-|---|---|---|
-| **Write-through** | Write hit | Update cache **and** main memory simultaneously |
-| **Write-back** | Write hit | Update cache now; update main memory on replacement |
-| **Write-around** | Write miss | Update main memory only; do not load into cache |
-| **Write-allocate** | Write miss | Update main memory **and** load block into cache |
+## Set-Associative — Worked Example
 
-## Mean Memory Access Time (MMAT)
+**Given:** MM = 128 words, Cache = 32 words, Block size = 4 words, **2-way** set associative
+
+::: {.incremental}
+- PA bits: $2^7 = 128$ → **7 bits**
+- Word offset: $2^2 = 4$ → **2 bits**
+- Number of cache lines: $32 / 4 = 8$ lines
+- Number of sets: $8 / 2 = 4$ sets → set bits = **2 bits**
+- Tag bits: $7 - 2 - 2 =$ **3 bits**
+:::
+
+. . .
+
+```
+PA (7 bits):
+┌──────────┬──────────────┬──────────────┐
+│  Tag (3)  │  Set No (2)  │  Offset (2)  │
+└──────────┴──────────────┴──────────────┘
+```
+
+## Set-Associative — Example (32-bit Processor)
+
+**Given:** 32-bit processor, 16 KB 4-way set associative cache, line size = 4 × 32-bit words = 16 bytes
+
+::: {.incremental}
+- PA bits: **32 bits**
+- Offset: $16 = 2^4$ → **4 bits** (but word-addressed → **2 bits** for 4 words)
+- Number of lines: $16\text{KB} / 16\text{B} = 1024$ lines
+- Number of sets: $1024 / 4 = 256$ sets → **8 bits**
+- Tag bits: $32 - 8 - 2 =$ **22 bits**
+:::
+
+. . .
+
+For address `ABCDE8F8`:  binary `...1110 1000 1111 1000`
+
+Set number = bits [9:2] = `00111110` = **set 62**
+
+## Set-Associative — Access Trace (2-Way, LRU)
+
+**Same reference string:** 0, 2, 4, 0, 6, 2, 0, 4 — **2 sets** (2-way), set = block mod 2
+
+| Step | Block | Set | Set State | Result | Action |
+|:---:|:---:|:---:|---|:---:|---|
+| 1 | 0 | 0 | S0:[**0**, -] S1:[-, -] | **Miss** | Load 0 → set 0 |
+| 2 | 2 | 0 | S0:[0, **2**] S1:[-, -] | **Miss** | Load 2 → set 0 |
+| 3 | 4 | 0 | S0:[**4**, 2] S1:[-, -] | **Miss** | Evict 0 (LRU), load 4 → set 0 |
+| 4 | 0 | 0 | S0:[4, **0**] S1:[-, -] | **Miss** | Evict 2 (LRU), load 0 → set 0 |
+| 5 | 6 | 0 | S0:[**6**, 0] S1:[-, -] | **Miss** | Evict 4 (LRU), load 6 → set 0 |
+| 6 | 2 | 0 | S0:[6, **2**] S1:[-, -] | **Miss** | Evict 0 (LRU), load 2 → set 0 |
+| 7 | 0 | 0 | S0:[**0**, 2] S1:[-, -] | **Miss** | Evict 6 (LRU), load 0 → set 0 |
+| 8 | 4 | 0 | S0:[0, **4**] S1:[-, -] | **Miss** | Evict 2 (LRU), load 4 → set 0 |
+
+Hit ratio = 0/8 = **0%** — worse than direct mapping here!
+
+::: {.notes}
+This is a deliberately adversarial example. All 8 blocks are even-numbered and map to set 0, so set 1 is never used. With only 2 lines in set 0 but 5 distinct blocks competing, thrashing is severe. This shows that set-associative mapping doesn't always beat direct mapping — it depends on the access pattern. In practice, real programs have more varied access patterns and set-associative performs better. If we used 4-way (4 lines per set, 1 set), this becomes fully associative and gets 50% hits.
+:::
+
+## Set-Associative — Tag Directory Size
+
+**Given:** MM = 128 words, Cache = 32 words, Block size = 4 words, 2-way
+
+::: {.incremental}
+- Tag bits = 3 (from earlier example)
+- Number of cache lines = 8
+- Valid bit = 1, Dirty bit = 1 per line
+- **Tag directory** = $8 \times (3 + 1 + 1) = 40$ bits = **5 bytes**
+:::
+
+. . .
+
+Compare across all three techniques (same memory configuration):
+
+| Technique | Tag bits/line | Lines | Directory size |
+|---|:---:|:---:|:---:|
+| Direct mapping | 2 | 8 | $8 \times 4 = 32$ bits |
+| 2-way set associative | 3 | 8 | $8 \times 5 = 40$ bits |
+| Fully associative | 5 | 8 | $8 \times 7 = 56$ bits |
+
+::: {.notes}
+As associativity increases, tag bits increase (because fewer index/set bits are needed), so the tag directory grows. This is part of the hardware cost trade-off. More associativity = fewer conflict misses but larger tag storage and more comparators.
+:::
+
+## All Three Mapping Techniques — Summary
+
+| Feature | Direct | Set-Associative ($k$-way) | Fully Associative |
+|---|---|---|---|
+| **Placement** | 1 possible line | $k$ possible lines (within set) | Any line |
+| **Relationship** | Many-to-one | Many-to-few | Many-to-many |
+| **Index/Set bits** | $\log_2(\text{lines})$ | $\log_2(\text{sets})$ | 0 |
+| **Tag bits** | Smallest | Medium | Largest |
+| **Comparators** | 1 | $k$ per set | 1 per line |
+| **Conflict misses** | Highest | Moderate | None |
+| **Replacement needed?** | No | Yes (within set) | Yes |
+| **Hardware cost** | Lowest | Moderate | Highest |
+| **Used in practice** | L1 instruction cache | L1/L2 data cache | TLBs, small caches |
+
+# Types of Cache Misses
+
+## Cache Performance Parameters
 
 ::: {.definition}
-**Look-Through Cache:** Cache is checked first; on miss, main memory is accessed.
+**Cache Hit.** The processor finds the requested data in the cache.
+:::
+
+::: {.definition}
+**Cache Miss.** The requested data is **not** present in the cache. The block must be fetched from main memory.
+:::
+
+::: {.incremental}
+- **Hit ratio** ($h$) = $\frac{\text{Number of hits}}{\text{Total number of references}}$
+- **Miss ratio** ($m$) = $1 - h$
+- **Miss penalty** = additional cycles required to serve the miss
+  - **Latency** — time to retrieve the first word of the block
+  - **Bandwidth** — time to retrieve the rest of the block
+:::
+
+## Three Types of Cache Misses
+
+::: {.incremental}
+- **Compulsory miss (cold miss)**
+  - First-ever access to a block — the block has never been in cache
+  - Unavoidable regardless of cache size or mapping technique
+  - Can be reduced by **prefetching**
+
+- **Conflict miss (collision / interference miss)**
+  - Occurs when multiple blocks compete for the **same cache line or set**
+  - Happens in direct mapping and set-associative mapping
+  - Can be reduced by **increasing associativity**
+
+- **Capacity miss**
+  - Cache is simply **too small** to hold all the blocks needed by the program
+  - Not caused by mapping technique — caused by cache size
+  - Can be reduced by **increasing cache size**
+:::
+
+# Block Replacement Policies
+
+## When is Replacement Needed?
+
+::: {.incremental}
+- Replacement is needed in **fully associative** and **set-associative** caches
+- In **direct mapping**, there is no choice — the old block is always evicted
+- When a miss occurs and the target line/set is full, a **replacement algorithm** decides which existing block to evict
+:::
+
+## FIFO (First In, First Out)
+
+::: {.definition}
+**FIFO.** Replace the block that has been in the cache the **longest**, regardless of how recently or frequently it was accessed.
+:::
+
+::: {.incremental}
+- Simple to implement — just maintain an arrival order queue
+- Does not consider usage patterns
+- Can evict frequently used blocks just because they arrived early
+- May suffer from **Belady's anomaly** — increasing cache size can sometimes increase miss rate
+:::
+
+## FIFO — Trace Example
+
+**Reference string:** 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5 — **3 cache lines**
+
+| Step | Ref | Line 0 | Line 1 | Line 2 | Result | Evicted |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 1 | 1 | **1** | - | - | Miss | — |
+| 2 | 2 | 1 | **2** | - | Miss | — |
+| 3 | 3 | 1 | 2 | **3** | Miss | — |
+| 4 | 4 | **4** | 2 | 3 | Miss | 1 (oldest) |
+| 5 | 1 | 4 | **1** | 3 | Miss | 2 (oldest) |
+| 6 | 2 | 4 | 1 | **2** | Miss | 3 (oldest) |
+| 7 | 5 | **5** | 1 | 2 | Miss | 4 (oldest) |
+| 8 | 1 | 5 | **1** | 2 | **Hit** | — |
+| 9 | 2 | 5 | 1 | **2** | **Hit** | — |
+| 10 | 3 | **3** | 1 | 2 | Miss | 5 (oldest) |
+| 11 | 4 | 3 | **4** | 2 | Miss | 1 (oldest) |
+| 12 | 5 | 3 | 4 | **5** | Miss | 2 (oldest) |
+
+Hits = 2, Misses = 10, **Hit ratio = 2/12 ≈ 16.7%**
+
+## LRU (Least Recently Used)
+
+::: {.definition}
+**LRU.** Replace the block that has **not been used** for the longest period of time.
+:::
+
+::: {.incremental}
+- Based on **temporal locality** — recently used blocks are likely to be used again
+- Better hit rate than FIFO in most workloads
+- Requires tracking **access history** for each block (hardware overhead)
+- Most commonly used replacement policy in practice
+:::
+
+## LRU — Trace Example
+
+**Same reference string:** 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5 — **3 cache lines**
+
+| Step | Ref | Line 0 | Line 1 | Line 2 | Result | Evicted |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 1 | 1 | **1** | - | - | Miss | — |
+| 2 | 2 | 1 | **2** | - | Miss | — |
+| 3 | 3 | 1 | 2 | **3** | Miss | — |
+| 4 | 4 | **4** | 2 | 3 | Miss | 1 (LRU) |
+| 5 | 1 | 4 | **1** | 3 | Miss | 2 (LRU) |
+| 6 | 2 | 4 | 1 | **2** | Miss | 3 (LRU) |
+| 7 | 5 | **5** | 1 | 2 | Miss | 4 (LRU) |
+| 8 | 1 | 5 | **1** | 2 | **Hit** | — |
+| 9 | 2 | 5 | 1 | **2** | **Hit** | — |
+| 10 | 3 | **3** | 1 | 2 | Miss | 5 (LRU) |
+| 11 | 4 | 3 | **4** | 2 | Miss | 1 (LRU) |
+| 12 | 5 | 3 | 4 | **5** | Miss | 2 (LRU) |
+
+Hits = 2, Misses = 10, **Hit ratio = 2/12 ≈ 16.7%**
+
+::: {.notes}
+In this particular reference string, FIFO and LRU produce the same result. This happens because the access pattern doesn't revisit blocks in a way that distinguishes "oldest" from "least recently used." With different patterns, LRU typically outperforms FIFO. For example, if block 1 were accessed frequently, LRU would keep it while FIFO might evict it.
+:::
+
+## Optimal Algorithm
+
+::: {.definition}
+**Optimal (Belady's Algorithm).** Replace the block that will **not be used for the longest time** in the future.
+:::
+
+::: {.incremental}
+- Produces the **minimum possible miss rate** — theoretical best
+- **Impossible to implement** in practice — requires knowledge of future accesses
+- Used as a **benchmark** to evaluate other algorithms
+- Useful in analysis to know how close FIFO/LRU come to the ideal
+:::
+
+## Optimal — Trace Example
+
+**Same reference string:** 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5 — **3 cache lines**
+
+| Step | Ref | Line 0 | Line 1 | Line 2 | Result | Evicted (reason) |
+|:---:|:---:|:---:|:---:|:---:|:---:|---|
+| 1 | 1 | **1** | - | - | Miss | — |
+| 2 | 2 | 1 | **2** | - | Miss | — |
+| 3 | 3 | 1 | 2 | **3** | Miss | — |
+| 4 | 4 | 1 | 2 | **4** | Miss | 3 (not used again until step 10) |
+| 5 | 1 | **1** | 2 | 4 | **Hit** | — |
+| 6 | 2 | 1 | **2** | 4 | **Hit** | — |
+| 7 | 5 | 1 | 2 | **5** | Miss | 4 (used at step 11, farthest) |
+| 8 | 1 | **1** | 2 | 5 | **Hit** | — |
+| 9 | 2 | 1 | **2** | 5 | **Hit** | — |
+| 10 | 3 | 1 | 2 | **3** | Miss | 5 (used at step 12, farthest) |
+| 11 | 4 | 1 | 2 | **4** | Miss | 3 (not used again) |
+| 12 | 5 | 1 | 2 | **5** | Miss | 4 (not used again) |
+
+Hits = 4, Misses = 8, **Hit ratio = 4/12 ≈ 33.3%**
+
+::: {.notes}
+Optimal achieves 4 hits vs. 2 for FIFO/LRU on this string. The key difference is at step 4: Optimal looks ahead and evicts block 3 (not needed until step 10) instead of block 1 (needed at step 5). This "future knowledge" saves two misses at steps 5 and 6. This is why Optimal serves as the theoretical benchmark — it shows the best any algorithm can achieve.
+:::
+
+## Replacement Policies — Comparison
+
+Using the reference string: **1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5** with 3 cache lines:
+
+| Algorithm | Hits | Misses | Hit Ratio | Implementable? |
+|---|:---:|:---:|:---:|:---:|
+| **FIFO** | 2 | 10 | 16.7% | Yes (simple queue) |
+| **LRU** | 2 | 10 | 16.7% | Yes (access tracking) |
+| **Optimal** | 4 | 8 | 33.3% | No (needs future knowledge) |
+
+::: {.incremental}
+- Optimal always gives the **best or equal** result — it's the theoretical lower bound on misses
+- LRU is the **best practical** algorithm — approximates Optimal using past access patterns
+- FIFO is the **simplest** to implement but can make poor eviction choices
+:::
+
+::: {.notes}
+In practice, LRU is the most widely used. However, true LRU requires tracking access order for all lines, which becomes expensive for high associativity. Many processors use pseudo-LRU approximations instead.
+:::
+
+# Cache Update Policies
+
+## Write Policies — Overview
+
+::: {.definition}
+**Update Policy.** Determines how the cache and main memory are kept consistent after a write operation.
+:::
+
+Two scenarios:
+
+::: {.incremental}
+- **Write hit** — the block being written to **is** in the cache
+  - Write-through or Write-back
+- **Write miss** — the block being written to is **not** in the cache
+  - Write-around or Write-allocate
+:::
+
+## Write-Through (on Write Hit)
+
+::: {.incremental}
+- Write to **both cache and main memory simultaneously**
+- Main memory is **always up to date** with the cache
+- Simplest policy to implement
+- **Disadvantage:** every write generates main memory traffic → slower
+- Best when writes are **infrequent**
+:::
+
+```
+CPU ──write──► Cache ──write──► Main Memory
+               (updated)        (updated immediately)
+```
+
+## Write-Back / Copy-Back (on Write Hit)
+
+::: {.incremental}
+- Write to **cache only**; main memory is updated later — **on replacement** of that cache line
+- A **dirty bit** tracks whether a line has been modified
+- Fewer main memory writes → **higher performance**
+- **Disadvantage:** main memory may contain **stale data** temporarily
+- Used in most modern processors
+:::
+
+```
+CPU ──write──► Cache           Main Memory
+               (updated)        (updated on eviction)
+                  │
+               dirty bit = 1
+```
+
+## Write-Around (on Write Miss)
+
+::: {.incremental}
+- Write directly to **main memory only** — do **not** load the block into cache
+- Avoids **cache pollution** — blocks that are written but not read don't waste cache space
+- Useful when written data is **unlikely to be read soon**
+- **Disadvantage:** if the data is read shortly after, it results in a miss
+:::
+
+```
+CPU ──write──────────────────► Main Memory
+               Cache            (updated)
+               (not affected)
+```
+
+## Write-Allocate (on Write Miss)
+
+::: {.incremental}
+- Write to main memory **and** load the block into cache
+- Exploits **spatial locality** — if you're writing to a block, you'll likely read/write nearby words soon
+- Often paired with **write-back** policy
+- **Disadvantage:** the cache load adds latency to the write operation
+:::
+
+```
+CPU ──write──► Main Memory
+                  │
+               load block
+                  │
+                  ▼
+               Cache
+               (block loaded)
+```
+
+## Write Policies — Summary
+
+| Policy | Trigger | Action | Use Case |
+|---|---|---|---|
+| **Write-through** | Write hit | Update cache + MM simultaneously | Simple systems, I/O coherence |
+| **Write-back** | Write hit | Update cache; MM on eviction | High-performance processors |
+| **Write-around** | Write miss | Update MM only; skip cache | Streaming writes, DMA |
+| **Write-allocate** | Write miss | Update MM + load block to cache | General purpose (with write-back) |
+
+## Common Write Policy Pairings
+
+In practice, write policies are used in **two standard combinations**:
+
+. . .
+
+:::: {.columns}
+::: {.column width="50%"}
+### Write-Through + Write-Around
+
+- On **hit**: update cache + MM immediately
+- On **miss**: write to MM only, skip cache
+- MM is **always consistent** with cache
+- Simpler hardware, **no dirty bits** needed
+- Used in: simple systems, I/O-heavy systems, L1 caches backed by L2
+:::
+
+::: {.column width="50%"}
+### Write-Back + Write-Allocate
+
+- On **hit**: update cache only (dirty bit = 1)
+- On **miss**: load block into cache, then write to cache
+- MM updated only on **eviction**
+- Fewer MM writes → **better performance**
+- Used in: most modern L1/L2 data caches
+:::
+::::
+
+::: {.notes}
+Patterson & Hennessy emphasize these two pairings because they're the only ones that make logical sense. Write-through + write-allocate would be wasteful (why load a block if you're writing through to MM anyway?). Write-back + write-around would miss the spatial locality benefit (if you're going to keep data in cache on hits, you should also bring it in on misses).
+:::
+
+## Write Policy — Worked Example
+
+**Scenario:** 4 cache lines (direct mapped), write-back + write-allocate
+
+Operations: `Write A`, `Read B`, `Write A`, `Write C`, `Read A`
+
+(A and C map to the same cache line)
+
+| Step | Op | Cache State | Hit/Miss | Action |
+|:---:|---|---|:---:|---|
+| 1 | Write A | Load A, write to cache | Miss | Allocate A, set dirty=1 |
+| 2 | Read B | Load B (different line) | Miss | Allocate B, dirty=0 |
+| 3 | Write A | A is in cache | **Hit** | Update cache, dirty=1 |
+| 4 | Write C | C maps to A's line | Miss | Write-back A to MM, allocate C, dirty=1 |
+| 5 | Read A | A's line has C | Miss | Write-back C to MM, allocate A, dirty=0 |
+
+::: {.notes}
+Step 4 is the key moment — since A is dirty, it must be written back to MM before C can take its place. Without write-back, this writeback wouldn't be needed (write-through would have kept MM up-to-date), but we'd have had more MM writes at steps 1 and 3.
+:::
+
+# Mean Memory Access Time (MMAT)
+
+## Performance Metrics — Definitions
+
+::: {.incremental}
+- **Hit Ratio** ($h$): fraction of accesses found in cache
+  $$h = \frac{\text{Number of cache hits}}{\text{Total memory references}}$$
+- **Miss Ratio** ($m$): $m = 1 - h$
+- $T_C$: cache access time
+- $T_M$: main memory access time
+- **MMAT**: average time per memory reference considering hits and misses
+:::
+
+## Look-Through Cache
+
+::: {.definition}
+**Look-Through.** The cache is checked **first**. On a miss, the access to main memory is started **after** the cache miss is detected.
+:::
+
 $$T_{\text{avg}} = T_C + (1 - h) \times T_M$$
+
+```
+CPU ──► Cache ──miss──► Main Memory
+        check           (sequential)
+        first
+```
+
+::: {.notes}
+In look-through, every access pays the cache access time $T_C$. On a miss, you additionally pay the main memory time $T_M$. So the cache time is always incurred, and the miss penalty is added on top.
 :::
+
+## Look-Aside Cache
 
 ::: {.definition}
-**Look-Aside Cache:** Cache and main memory are accessed in parallel.
-$$T_{\text{avg}} = h \times T_C + (1 - h) \times T_M$$
+**Look-Aside.** The cache and main memory are accessed **in parallel**. If the cache hits, the main memory access is cancelled.
 :::
 
-Where $h$ = hit ratio, $T_C$ = cache access time, $T_M$ = main memory access time.
+$$T_{\text{avg}} = h \times T_C + (1 - h) \times T_M$$
 
-## MMAT Example
+```
+CPU ──► Cache          (parallel)
+   └──► Main Memory
+```
+
+::: {.notes}
+In look-aside, on a hit you only pay $T_C$ (the memory access is cancelled). On a miss, you pay $T_M$ (the cache contributes nothing useful). So the average is a weighted sum based on hit ratio.
+:::
+
+## MMAT — Example 1
 
 **Given:** $T_C = 20\text{ns}$, $T_M = 200\text{ns}$, $h = 0.9$
 
@@ -596,3 +1319,34 @@ $$T_{\text{avg}} = 20 + (1 - 0.9) \times 200 = 20 + 20 = 40\text{ns}$$
 **Look-aside:**
 
 $$T_{\text{avg}} = 0.9 \times 20 + 0.1 \times 200 = 18 + 20 = 38\text{ns}$$
+
+## MMAT — Example 2 (Mixed Read/Write)
+
+**Given:** Write-back cache (look-through), $T_C = 30\text{ns}$, $T_M = 300\text{ns}$
+
+- Read hit ratio = 80%, Write hit ratio = 90%
+- Reads = 60% of references, Writes = 40%
+
+. . .
+
+**Read $T_{\text{avg}}$:** $30 + (1 - 0.8) \times 300 = 30 + 60 = 90\text{ns}$
+
+**Write $T_{\text{avg}}$:** $30 + (1 - 0.9) \times 300 = 30 + 30 = 60\text{ns}$
+
+. . .
+
+**Overall $T_{\text{avg}}$:** $0.6 \times 90 + 0.4 \times 60 = 54 + 24 = 78\text{ns}$
+
+## MMAT — Example 2 (Look-Aside Variant)
+
+**Same problem** but with **look-aside** cache:
+
+. . .
+
+**Read $T_{\text{avg}}$:** $0.8 \times 30 + 0.2 \times 300 = 24 + 60 = 84\text{ns}$
+
+**Write $T_{\text{avg}}$:** $0.9 \times 30 + 0.1 \times 300 = 27 + 30 = 57\text{ns}$
+
+. . .
+
+**Overall $T_{\text{avg}}$:** $0.6 \times 84 + 0.4 \times 57 = 50.4 + 22.8 = 73.2\text{ns}$

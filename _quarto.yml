@@ -2,6 +2,7 @@ project:
   type: default
   output-dir: _output
   render:
+    - index.qmd
     - lectures/*.qmd
     - labs/*.qmd
     - assignments/*.qmd
