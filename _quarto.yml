@@ -1,6 +1,9 @@
 project:
   type: default
   output-dir: _output
+  resources:
+    - reference/DrPKeerthika-WINSEM2025-26_VL_BCSE205L_00100_TH_2026-03-10_Module4.pdf
+    - reference/DrPKeerthika-WINSEM2025-26_VL_BCSE205L_00100_TH_2026-03-10_Module-5.pdf
   render:
     - index.qmd
     - lectures/*.qmd
