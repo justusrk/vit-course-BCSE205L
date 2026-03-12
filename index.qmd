@@ -19,7 +19,7 @@ format:
 <!-- <tr><td>2</td><td>Data Representation and Computer Arithmetic</td><td><a href="lectures/M2-data-representation-arithmetic.html">View slides</a></td></tr> -->
 <!-- <tr><td>3</td><td>Instruction Sets and Control Unit</td><td><a href="lectures/M3-instruction-sets-control.html">View slides</a></td></tr> -->
 <tr><td>4</td><td>Memory System Organization and Architecture</td><td><a href="lectures/M4-memory-systems.html">View slides</a></td><td><a href="reference/DrPKeerthika-WINSEM2025-26_VL_BCSE205L_00100_TH_2026-03-10_Module4.pdf">Dr. P. Keerthika</a></td></tr>
-<tr><td>5</td><td>Interfacing and Communication</td><td><a href="lectures/M5-interfacing-communication.html">View slides</a></td><td><a href="reference/DrPKeerthika-WINSEM2025-26_VL_BCSE205L_00100_TH_2026-03-10_Module-5.pdf">Dr. P. Keerthika</a></td></tr>
+<tr><td>5</td><td>Interfacing and Communication</td><td><a href="lectures/M5-interfacing-communication.html">View slides</a></td><td><a href="reference/DrPKeerthika-WINSEM2025-26_VL_BCSE205L_00100_TH_2026-03-10_Module-5.pdf">Dr. P. Keerthika</a><br><a href="reference/DrUshus-5th-Module-CAT-2.pdf">Dr. Ushus</a></td></tr>
 <!-- <tr><td>6</td><td>Subsystems</td><td><a href="lectures/M6-subsystems.html">View slides</a></td></tr> -->
 <!-- <tr><td>7</td><td>High Performance Processors</td><td><a href="lectures/M7-high-performance-processors.html">View slides</a></td></tr> -->
 <!-- <tr><td>8</td><td>Contemporary Issues</td><td><a href="lectures/M8-contemporary-issues.html">View slides</a></td></tr> -->
