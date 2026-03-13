@@ -6,6 +6,10 @@ project:
     - reference/DrPKeerthika-WINSEM2025-26_VL_BCSE205L_00100_TH_2026-03-10_Module-5.pdf
     - reference/DrPKeerthika-WINSEM2025-26_VL_BCSE205L_00100_TH_2026-02-23_Module-3--Part-2.pdf
     - reference/DrUshus-5th-Module-CAT-2.pdf
+    - reference/Ref-Memory.pdf
+    - "reference/Ref-Cache Memory_0503.pdf"
+    - "reference/Ref-Memory Interleaving.pdf"
+    - reference/Ref-Replacement-Algorithm.pdf
   render:
     - index.qmd
     - lectures/*.qmd
