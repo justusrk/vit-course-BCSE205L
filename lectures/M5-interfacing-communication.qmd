@@ -21,3 +21,402 @@ date: last-modified
 ::: {.notes}
 This module covers the fundamentals of I/O interfacing, the different techniques for data transfer between the processor and peripherals, interrupt handling mechanisms, and bus communication protocols.
 :::
+
+# Direct Cache Access
+
+## Direct Cache Access (DCA) {#dca}
+
+::: {.definition}
+**Direct Cache Access.** A system protocol that allows an I/O device to load data **directly into the processor cache**, bypassing main memory.
+:::
+
+::: {.incremental}
+- Cache is then used by the network stack process for **immediate access**
+- Reduces the number of **memory access operations** needed to process each packet
+- Increases throughput and reduces CPU load
+- Eliminates processor cycles required to read packet headers and descriptors from system memory
+:::
+
+## Example: DCA in Network Packet Processing
+
+::: {.incremental}
+- A **10 Gbps Ethernet NIC** receives thousands of packets per second
+- Each packet must be inspected by the OS **network stack** — the kernel's layered software (driver → IP → TCP → application socket) that processes packets
+- **Without DCA:** NIC writes packet to main memory via DMA → CPU reads it back from memory (~60 ns latency per access) → cache miss on every packet header read
+- **With DCA:** NIC writes packet **directly into CPU cache** → when the network stack runs, packet headers are already in L2/L3 cache → **near-instant access** (~1–10 ns)
+- Result: Intel measured **up to 30% reduction in CPU cycles** per packet with DCA on high-throughput workloads
+:::
+
+## DCA vs Traditional DMA
+
+::: {.incremental}
+- **Traditional DMA path:**
+  1. I/O device DMAs packets to main memory
+  2. CPU later fetches them to cache
+  - Inefficient: large number of accesses to main memory, high latency (>60 ns), unnecessary memory bandwidth usage
+- **DCA improves DMA** by changing its target from memory to the **processor cache**
+- DMA frees the processor from heavy memory copy in I/O operations, which increases processor utilization with high-speed I/O devices
+:::
+
+## How DCA Works
+
+::: {.incremental}
+- DCA enables a capable I/O device (e.g., network controller) to **activate a pre-fetch engine** in the CPU
+- Arriving packet data is loaded into the CPU cache for **immediate access** by the network stack
+- **Prefetching** is often based on hints provided by Transaction Layer Packet (TLP) **processing hints (TPH)**
+- These hints indicate which data blocks are likely to be accessed soon, allowing prefetch into cache for faster access
+:::
+
+::: {.notes}
+DCA is particularly useful for high-speed network I/O where the CPU needs to process packet headers quickly. By prefetching into cache, the CPU avoids the ~60ns latency penalty of going to main memory for every packet.
+:::
+
+# Interrupt Structures
+
+## What is an Interrupt? {#interrupt-def}
+
+::: {.definition}
+**Interrupt.** A signal from a device or program that causes the CPU to stop its normal program execution and perform service related to the event.
+:::
+
+::: {.incremental}
+- CPU saves current state (context switching)
+- Branches to the **Interrupt Service Routine (ISR)**
+- Executes ISR program
+- Restores state and returns to interrupted program (context switching back)
+:::
+
+## Types of Interrupts
+
+```{mermaid}
+%%| fig-width: 9
+flowchart TD
+    A[Interrupts] --> B[Hardware Interrupts]
+    A --> C[Software Interrupts]
+    B --> D["External / I/O Interrupts"]
+    B --> E["Internal Interrupts<br/>(Exceptions)"]
+    C --> F["Program Generated"]
+    D --> D1["I/O completion<br/>Ready status<br/>I/O error"]
+    E --> E1["Divide overflow<br/>Invalid instruction<br/>Page fault"]
+    F --> F1["INT instruction<br/>System calls<br/>Device drivers"]
+```
+
+## Vectored and Priority Interrupts — Overview
+
+> "Priorities determine which device is serviced first, and vectors determine what routine is used to service the interrupt"
+
+::: {.incremental}
+- **Vectored interrupts** — device specifies its handler by sending a vector (address/identifier) to the processor
+- **Priority interrupts** — multiple devices connected to interrupt lines; CPU ignores lower-priority requests while handling higher-priority ones
+- **Vector table** — tells the processor where to execute code when an interrupt happens
+- **Priority level** — tells the processor *when* it's allowed to go there and execute
+:::
+
+## Vectored Interrupts {#vectored-int}
+
+::: {.incremental}
+- Device identifies itself by **sending a special code to the processor** over the bus
+- This code is the **interrupt vector** — a numeric identifier or address pointing to the specific ISR
+- Processor uses the vector to locate the appropriate ISR in a predefined table or memory location
+:::
+
+### Steps:
+
+::: {.incremental}
+1. Interrupt occurs — some event triggers the interrupt
+2. **Vector provided** — interrupting device sends a unique identifier to the processor
+3. **ISR located** — processor uses vector to find the ISR in the interrupt vector table
+4. **Processing** — processor jumps to the ISR address and executes it (save state, handle interrupt, restore state)
+5. **Return** — processor returns to the interrupted program
+:::
+
+## Prioritized Interrupts {#prioritized-int}
+
+::: {.incremental}
+- I/O devices organized in a **priority structure**
+- Interrupt from a **higher-priority device is accepted** even while servicing a lower-priority interrupt
+- Processor's priority level is set equal to the priority of the program/ISR in execution
+- Processor **only accepts interrupts from devices with higher priority** — ignores same or lower
+- Priority level stored in bits of the **processor's status register**
+:::
+
+## Maskable vs Non-Maskable Interrupts
+
+::: {.incremental}
+- **Maskable Interrupt (MI)**
+  - Hardware interrupts that **can be delayed** when a higher-priority interrupt is being serviced
+  - Can be disabled by software using interrupt mask bits
+
+- **Non-Maskable Interrupt (NMI)**
+  - Hardware interrupts that **cannot be delayed** — must be processed immediately
+  - Used for critical events: memory parity errors, power failure, watchdog timer
+  - Always has the highest priority (priority level -1)
+:::
+
+## Priority Resolution Methods
+
+When two devices interrupt simultaneously, the computer services the **higher-priority device first**.
+
+Priority can be established by:
+
+::: {.incremental}
+- **Software method:** Polling
+- **Hardware methods:** Daisy chain, Parallel priority
+:::
+
+## Software Method — Polling
+
+::: {.incremental}
+- All interrupts branch to the **same service program**
+- Program **checks with each device** in sequence if it generated the interrupt
+- Order of checking = priority — highest-priority device checked first
+- Highest-priority source tested first; if its interrupt signal is on, control branches to its ISR
+- Otherwise, next-lower-priority source tested, and so on
+:::
+
+::: {.notes}
+Polling is simple but slow — the CPU must check every device in order. The advantage is that no special hardware is needed; the disadvantage is the overhead of checking each device, especially when there are many devices.
+:::
+
+## Hardware Method — Daisy Chaining {#daisy-chain}
+
+::: {.incremental}
+- All interrupt-requesting devices connected **in a serial chain**
+- Device with **highest priority placed first** in the chain
+- When no interrupts pending, interrupt request line is HIGH
+- When a device raises an interrupt, it places the line in **LOW state**
+- CPU acknowledges and sends signal to PI (Priority In) of device 1
+:::
+
+## Daisy Chaining — Operation
+
+::: {.incremental}
+- **If device has NOT requested** the interrupt:
+  - PI = 1 and PO = 1 (passes acknowledge signal through)
+- **If device HAS requested** the interrupt:
+  - PI = 1 and PO = 0 (blocks further propagation)
+  - Device places its **interrupt vector address (VAD)** on data bus
+  - Sets interrupt request signal to HIGH (interrupt handled)
+- **If PI = 0** (acknowledge was blocked by earlier device):
+  - PO = 0 — device cannot get serviced
+:::
+
+## Daisy Chaining — Advantages & Disadvantages
+
+### Advantages
+
+::: {.incremental}
+- Simple and scalable
+- Can add more devices anywhere along the chain
+:::
+
+### Disadvantages
+
+::: {.incremental}
+- Priority depends on physical position on the bus
+- **Propagation delay** arises in this method
+- If one device fails, the entire chain breaks
+:::
+
+## Hardware Method — Parallel Priority
+
+::: {.incremental}
+- Accepts interrupt requests from many sources
+- Determines which has the **highest priority** using a priority encoder
+- Issues interrupt request to computer based on this determination
+- Each interrupt source has its own **interrupt vector** for direct ISR access
+- Hardware priority established by either serial (daisy chain) or **parallel** connection of interrupt lines
+:::
+
+# Interrupt Overhead
+
+## Interrupt Overhead {#interrupt-overhead}
+
+::: {.definition}
+**Interrupt Overhead.** The total time and resources consumed by the processor in handling an interrupt, beyond the actual ISR execution.
+:::
+
+::: {.incremental}
+- **Context save** — save current PC, registers, status flags to stack
+- **Interrupt acknowledgment** — identify the source (polling or vector)
+- **Branch to ISR** — fetch ISR address from vector table, jump to it
+- **ISR execution** — the actual interrupt handling work
+- **Context restore** — pop saved state from stack, restore registers
+- **Return from interrupt** — resume the interrupted program
+:::
+
+::: {.notes}
+The overhead components (everything except the ISR execution itself) represent wasted CPU cycles. In systems with frequent interrupts, this overhead can significantly impact performance. This is why DMA and DCA are preferred for high-throughput data transfers — they minimize the number of interrupts needed.
+:::
+
+## Sources of Overhead
+
+::: {.incremental}
+- **Register save/restore** — more registers = more overhead per interrupt
+- **Pipeline flush** — modern pipelined processors must flush the pipeline on interrupt, wasting partially executed instructions
+- **Cache effects** — ISR execution may evict useful data from cache (cache pollution)
+- **Nested interrupts** — higher-priority interrupt during ISR adds additional context save/restore cycles
+- **Memory latency** — fetching the interrupt vector and ISR from memory
+:::
+
+## Reducing Interrupt Overhead
+
+::: {.incremental}
+- **DMA/DCA** — reduce the number of interrupts by transferring blocks instead of individual bytes
+- **Interrupt coalescing** — batch multiple events into a single interrupt
+- **Shadow registers** — dedicated register sets for ISR to avoid save/restore
+- **Vectored interrupts** — eliminate the polling overhead of identifying the source
+- **Priority masking** — prevent unnecessary low-priority interrupts from triggering
+:::
+
+# Buses
+
+## What is a Bus? {#bus-def}
+
+::: {.definition}
+**Bus.** A communication system that enables the transfer of data, addresses, and control signals between various components of a computer system.
+:::
+
+::: {.incremental}
+- Serves as a **shared pathway** through which information flows between hardware components
+- Three types of bus lines:
+  - **Data bus** — carries the actual data
+  - **Address bus** — carries memory/device addresses
+  - **Control bus** — carries control signals (R/W, MREQ, IOREQ, clock, etc.)
+:::
+
+## Synchronous Bus {#sync-bus}
+
+::: {.definition}
+**Synchronous Bus.** A bus that includes a **clock in the control lines** and uses a fixed protocol for communication relative to the clock.
+:::
+
+::: {.incremental}
+- Used in processor-memory buses where devices are close and speeds are similar
+- All events occur at **fixed clock edges**
+- **Advantages:**
+  - Simple — involves very little logic
+  - Can run very fast
+- **Disadvantages:**
+  - Every device must operate at the **same clock rate**
+  - Bus length limited by clock skew
+:::
+
+## Asynchronous Bus {#async-bus}
+
+::: {.definition}
+**Asynchronous Bus.** A bus that is **not clocked** and uses a handshaking protocol with additional control lines (ReadReq, Ack, DataRdy).
+:::
+
+::: {.incremental}
+- Used in I/O buses where devices have varying speeds
+- Events coordinated by **handshaking signals** instead of a clock
+- **Advantages:**
+  - Can accommodate a **wide range of devices** and device speeds
+  - No clock skew issues — supports longer buses
+- **Disadvantages:**
+  - Slower than synchronous due to handshaking overhead
+  - More complex interface logic
+:::
+
+## Synchronous vs Asynchronous Buses
+
+| Feature | Synchronous Bus | Asynchronous Bus |
+|---|---|---|
+| **Clock** | Shared clock signal | No clock — uses handshaking |
+| **Speed** | Faster | Slower |
+| **Device speeds** | Must be same | Can be different |
+| **Logic complexity** | Simple | More complex |
+| **Bus length** | Limited (clock skew) | Can be longer |
+| **Example** | Processor-memory bus | I/O bus |
+
+# Bus Arbitration
+
+## Bus Arbitration {#bus-arb}
+
+::: {.definition}
+**Bus Arbitration.** The process of acquiring control over a shared bus when multiple devices compete for access.
+:::
+
+::: {.incremental}
+- A bus **cannot be used by more than one device** at a time (electrical constraint)
+- Before performing any read/write, a device must **obtain permission**
+- **Master** — the device that initiates a read/write operation
+- **Slave** — the device that responds to the master
+- Only **one processor or controller** can be bus master at any given instant
+:::
+
+## Bus Arbitration Methods
+
+Three main methods:
+
+::: {.incremental}
+1. **Daisy Chain** (serial)
+2. **Independent Bus Requests and Grant** (parallel)
+3. **Polling** (hybrid)
+:::
+
+## 1. Daisy Chain Arbitration {#arb-daisy}
+
+::: {.incremental}
+- All bus masters use the **same request line**
+- Bus grant signal **serially propagates** through each master
+- First requesting master encountered **blocks the grant signal** — gets bus access
+- Others further down the chain are denied access
+:::
+
+### Advantages & Disadvantages
+
+::: {.incremental}
+- **Advantages:** Simple, scalable — can add devices along the chain
+- **Disadvantages:**
+  - Priority depends on **physical position** on the bus
+  - **Propagation delay** — devices further down wait longer
+  - If one device fails, the **entire system stops** working
+:::
+
+## 2. Independent Bus Requests and Grant {#arb-independent}
+
+::: {.incremental}
+- Each master has a **separate pair** of bus request and bus grant lines
+- Each pair has a **priority assigned** to it
+- Built-in **priority decoder** within the controller selects the highest-priority request
+- Asserts the corresponding bus grant signal
+:::
+
+### Advantages & Disadvantages
+
+::: {.incremental}
+- **Advantage:** Fast response — no serial propagation delay
+- **Disadvantage:** Hardware cost is high — large number of control lines required (2 lines per device)
+:::
+
+## 3. Polling Arbitration {#arb-polling}
+
+::: {.incremental}
+- Controller generates the **address of each master** (unique priority)
+- Number of address lines depends on the number of masters ($\lceil \log_2 N \rceil$ lines for $N$ masters)
+- Controller generates a sequence of master addresses
+- When the requesting master **recognizes its address**, it activates the busy line and begins using the bus
+:::
+
+### Advantages & Disadvantages
+
+::: {.incremental}
+- **Advantages:**
+  - Does not favor any particular device
+  - Simple implementation
+  - Single device failure does **not** stop the entire system
+- **Disadvantage:** Adding bus masters requires more address lines, changing the circuit
+:::
+
+## Bus Arbitration — Comparison
+
+| Feature | Daisy Chain | Independent Req/Grant | Polling |
+|---|---|---|---|
+| **Request lines** | 1 shared | 1 per device | 1 shared |
+| **Grant method** | Serial propagation | Parallel — dedicated lines | Address-based |
+| **Speed** | Slow (serial delay) | Fast | Moderate |
+| **Hardware cost** | Low | High | Moderate |
+| **Scalability** | Easy to add devices | Hard (more lines) | Hard (more address bits) |
+| **Fault tolerance** | Poor — chain breaks | Good | Good |

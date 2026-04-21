@@ -1,0 +1,86 @@
+---
+title: "Remedial Assignment — CAT-2"
+subtitle: "BCSE205L — Computer Architecture and Organization"
+author: "Justus Raju"
+date: last-modified
+format:
+  revealjs:
+    hash-type: number
+    scrollable: true
+    incremental: false
+    title-slide-attributes:
+      data-visibility: "hidden"
+---
+
+## Remedial Assignment — CAT-2 {.smaller}
+
+**Coverage:** Module 3 partial, Module 4 full, Module 5 up to DMA
+
+**Submit:** written solutions with all steps, diagrams wherever needed.
+
+| Module | CAT-2 weight | Questions |
+|---|---:|---:|
+| M3 — Instruction cycle, control, performance | 10 marks | 2 |
+| M4 — Memory systems and cache | 25 marks | 5 |
+| M5 — I/O and DMA | 15 marks | 3 |
+| **Total** | **50 marks** | **10** |
+
+::: {.notes}
+Questions are adapted from BCSE205L CAT-2 PYQP patterns.
+:::
+
+## Module 3 — Instruction Cycle, Control, Performance {.smaller}
+
+1. Three processors execute the same ISA.
+
+   | Processor | Clock rate | CPI |
+   |---|---:|---:|
+   | P1 | 3 GHz | 1.5 |
+   | P2 | 2.5 GHz | 1.0 |
+   | P3 | 4 GHz | 2.2 |
+
+   Determine the highest-performance processor. If each runs a program for 10 s, calculate cycles and instruction count. If execution time must reduce by 30% while CPI rises by 20%, find the new required clock rate.
+
+2. Compare **hardwired** and **microprogrammed** control units. For adding 30 new CPU instructions, which control approach is easier to extend? Justify with design complexity, speed, and flexibility.
+
+## Module 4 — Memory Systems and Cache I {.smaller}
+
+3. A computer uses `1024 x 8` RAM chips and `1024 x 8` ROM chips. It requires `2K x 8` RAM, `2K x 8` ROM, and four interface units with four registers each. Higher-order address bits assign `00` to RAM, `01` to ROM, and `10` to interface registers. Find chip count, address map, hexadecimal ranges, and chip layout.
+
+4. A byte-addressable memory has 64 bytes and 4-way **high-order interleaving**. For CPU address `101100`, identify module-select bits, location-select bits, selected module, byte location, and sketch the memory organization.
+
+5. A system needs `512K x 32` byte-addressable RAM using `64K x 8` RAM chips. Design an interleaved memory system: total chips, number of banks, chips per bank, bank-select address lines, and decoder logic. Then repeat if expanded to `1M x 32`.
+
+## Module 4 — Memory Systems and Cache II {.smaller}
+
+6. A 2-way set-associative cache has 8 total cache lines. Main memory has 128 blocks. Starting with empty cache, use **optimal replacement** for this reference string:
+
+   `5, 2, 3, 7, 3, 15, 14, 2, 1, 21, 13, 72, 12, 5, 19, 3, 2, 1, 22, 9, 26, 10, 5, 1, 7, 26, 14, 9, 19, 26`
+
+   Show final cache contents, hit ratio, and miss ratio.
+
+7. A fully associative cache has 4 blocks, block size 1 word, initially empty. For references
+
+   `10, 20, 30, 40, 10, 20, 10, 50, 20, 30, 10, 20, 30, 40, 10`
+
+   simulate FIFO and LRU. Compute hit ratio, miss ratio, compulsory misses, and conflict/capacity misses. State which policy performs better.
+
+## Module 5 — I/O and DMA {.smaller}
+
+8. A disk transfers data to memory using DMA at `10 MB/s`. Processor speed is `600 MHz`. It takes 300 cycles to initiate and 900 cycles to complete a DMA transfer. For a `20 KB` block, calculate percentage of processor time consumed.
+
+9. Explain the role of an I/O interface module in the I/O subsystem. Draw a neat block diagram and include address decoding, control interpretation, data synchronization, and peripheral controller interaction.
+
+10. For a DMA controller in a microcontroller system, list and explain the three key registers programmed by the CPU before transfer. Recommend a DMA transfer mode for time-critical high-bandwidth communication and justify.
+
+## PYQP Sources {.smaller}
+
+- BCSE205L CAT-2 D1, Fall 2025-26 — processor performance, control unit, cache FIFO/LRU, interleaved memory, DMA.
+- BCSE205L CAT-2 D2, Winter 2023-24 — performance metrics, memory map, optimal cache, DMA timing, I/O interface, instruction cycle.
+- ExamCooker BCSE205L CAT-2 index lists available past papers for 2023-24 and 2024-25.
+
+Source links:
+
+- <https://www.scribd.com/document/997546692/BCSE205L-CAT-2-D1-2025-2026>
+- <https://www.scribd.com/document/997546714/BCSE205L-CAT-2-D2-2023-2024>
+- <https://examcooker.acmvit.in/courses/BCSE205L/cat-2>

@@ -21,3 +21,9 @@ date: last-modified
 ::: {.notes}
 This module explores parallel processing architectures, pipelining techniques and their hazards, superscalar design, and performance evaluation methods for parallel processors including Amdahl's law.
 :::
+
+## References
+
+- [Dr. P. Keerthika — Module 7 Reference](../reference/DrPKeerthika-WINSEM2024-25_BCSE205L_TH_VL2024250501395_2025-04-02_Reference-Material-I-Module7.pdf)
+- Patterson & Hennessy — *Computer Organization and Design* (6th ed.), Ch. 4, App. C
+- Stallings — *Computer Organization and Architecture* (10th ed.), Ch. 14, 17

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BCSE205L — CAT-2 Answer Key — SET A</title>
+<style>
+  @page { margin: 1.5cm 2cm; size: A4; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 11pt; line-height: 1.5; color: #111; padding: 2cm; }
+  .set { page-break-before: always; }
+  .set:first-child { page-break-before: auto; }
+  .header { text-align: center; border-bottom: 2px solid #c00; padding-bottom: 10px; margin-bottom: 12px; }
+  .header h1 { font-size: 14pt; margin-bottom: 2px; }
+  .header h2 { font-size: 12pt; font-weight: normal; margin-bottom: 2px; }
+  .header .confidential { font-size: 10pt; color: #c00; font-weight: bold; text-transform: uppercase; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
+  th, td { border: 1px solid #999; padding: 5px 8px; text-align: left; font-size: 10.5pt; }
+  th { background: #e8e8e8; font-weight: 700; }
+  td.qnum { text-align: center; font-weight: 700; width: 40px; }
+  td.ans { font-weight: 700; color: #c00; width: 60px; text-align: center; }
+  td.type { width: 50px; text-align: center; font-size: 9pt; color: #555; }
+  .short-ans { font-weight: normal; color: #111; }
+  .section-label { font-weight: bold; font-size: 12pt; margin: 16px 0 8px 0; padding: 4px 8px; background: #f0f0f0; border-left: 4px solid #c00; }
+  @media print {
+    .set { page-break-before: always; }
+    .set:first-child { page-break-before: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== SET A ANSWER KEY ==================== -->
+<div class="set" id="key-a">
+<div class="header">
+  <h1>BCSE205L — CAT-2 Quiz Answer Key</h1>
+  <h2>SET A</h2>
+  <p class="confidential">Confidential — For Instructor Use Only</p>
+</div>
+
+<table>
+<tr><th>#</th><th>Type</th><th>Ans</th><th>Explanation / Model Answer</th></tr>
+<tr><td class="qnum">1</td><td class="type">MCQ</td><td class="ans">D</td><td>Compile is a software translation step, not a hardware instruction-cycle phase. The phases are: Fetch, Decode, Execute (and optionally Memory access, Write-back).</td></tr>
+<tr><td class="qnum">2</td><td class="type">MCQ</td><td class="ans">B</td><td>Big Endian stores the MSB at the lowest memory address.</td></tr>
+<tr><td class="qnum">3</td><td class="type">MCQ</td><td class="ans">B</td><td>In programmed I/O, the CPU continuously polls the device status (busy-waiting) until the transfer completes.</td></tr>
+<tr><td class="qnum">4</td><td class="type">Short</td><td class="ans">—</td><td>MIPS = Million Instructions Per Second. Formula: MIPS = Instruction Count / (Execution Time &times; 10<sup>6</sup>), or equivalently MIPS = Clock Rate / (CPI &times; 10<sup>6</sup>).</td></tr>
+<tr><td class="qnum">5</td><td class="type">MCQ</td><td class="ans">C</td><td>Fully associative mapping allows a block to be placed in any available cache line.</td></tr>
+<tr><td class="qnum">6</td><td class="type">MCQ</td><td class="ans">A</td><td>Programmed I/O keeps the CPU busiest — it is stuck in a polling loop for the entire transfer. DMA frees the CPU the most.</td></tr>
+<tr><td class="qnum">7</td><td class="type">MCQ</td><td class="ans">C</td><td>Registers are the fastest and smallest memory in the hierarchy.</td></tr>
+<tr><td class="qnum">8</td><td class="type">MCQ</td><td class="ans">C</td><td>FIFO may suffer from Belady's anomaly — increasing cache size can paradoxically increase the miss rate.</td></tr>
+<tr><td class="qnum">9</td><td class="type">MCQ</td><td class="ans">B</td><td>Interrupt-driven I/O lets the CPU do other work; the device sends an interrupt when ready.</td></tr>
+<tr><td class="qnum">10</td><td class="type">Short</td><td class="ans">—</td><td>ALU functions: Arithmetic operations (add, subtract, multiply, divide), Logic operations (AND, OR, NOT, XOR), Shift operations, Comparison operations.</td></tr>
+<tr><td class="qnum">11</td><td class="type">MCQ</td><td class="ans">A</td><td>Direct mapping: Cache line = Block address MOD Number of cache lines.</td></tr>
+<tr><td class="qnum">12</td><td class="type">MCQ</td><td class="ans">B</td><td>Cycle stealing — the DMA controller borrows bus cycles from the CPU to transfer data.</td></tr>
+<tr><td class="qnum">13</td><td class="type">Short</td><td class="ans">—</td><td>Little Endian stores LSB first: Addr 100 = BE, Addr 101 = BA, Addr 102 = FE, Addr 103 = CA.</td></tr>
+<tr><td class="qnum">14</td><td class="type">MCQ</td><td class="ans">B</td><td>Write-back updates main memory only when the dirty cache line is evicted/replaced.</td></tr>
+<tr><td class="qnum">15</td><td class="type">MCQ</td><td class="ans">B</td><td>Strobe uses a single control line activated by either source or destination to signal data validity.</td></tr>
+<tr><td class="qnum">16</td><td class="type">MCQ</td><td class="ans">C</td><td>MIPS = 2&times;10<sup>8</sup> / (0.5 &times; 10<sup>6</sup>) = 400 MIPS.</td></tr>
+<tr><td class="qnum">17</td><td class="type">MCQ</td><td class="ans">B</td><td>16 lines / 4-way = 4 sets.</td></tr>
+<tr><td class="qnum">18</td><td class="type">Short</td><td class="ans">—</td><td>DMA is a technique where a dedicated controller transfers data directly between I/O devices and main memory without continuous CPU involvement. Advantage: frees the CPU to perform other tasks during transfer.</td></tr>
+<tr><td class="qnum">19</td><td class="type">MCQ</td><td class="ans">B</td><td>Microprogrammed control unit generates signals from microinstructions stored in control memory (ROM).</td></tr>
+<tr><td class="qnum">20</td><td class="type">Short</td><td class="ans">—</td><td>Look-aside: T<sub>avg</sub> = h &times; T<sub>C</sub> + (1&minus;h) &times; T<sub>M</sub> = 0.95 &times; 10 + 0.05 &times; 100 = 9.5 + 5 = <strong>14.5 ns</strong>.</td></tr>
+<tr><td class="qnum">21</td><td class="type">MCQ</td><td class="ans">B</td><td>Buffering temporarily stores data to compensate for speed differences between devices.</td></tr>
+<tr><td class="qnum">22</td><td class="type">Short</td><td class="ans">—</td><td>PA = log<sub>2</sub>(256) = 8 bits. Offset = log<sub>2</sub>(8) = 3 bits. Lines = 64/8 = 8 → Index = log<sub>2</sub>(8) = 3 bits. Tag = 8 &minus; 3 &minus; 3 = <strong>2 tag, 3 index, 3 offset</strong>.</td></tr>
+<tr><td class="qnum">23</td><td class="type">Short</td><td class="ans">—</td><td>Ref: 1,2,3,4,1,2 on 3 lines (FIFO):<br>1→[1,-,-] Miss | 2→[1,2,-] Miss | 3→[1,2,3] Miss | 4→[4,2,3] Miss (evict 1) | 1→[4,1,3] Miss (evict 2) | 2→[4,1,2] Miss (evict 3). <strong>Hits = 0, Misses = 6</strong>.</td></tr>
+<tr><td class="qnum">24</td><td class="type">Short</td><td class="ans">—</td><td>Handshaking uses two control signals. Sender asserts "data valid"; receiver reads data and asserts "acknowledge"; sender de-asserts its signal; receiver de-asserts acknowledge. This four-step protocol ensures reliable transfer regardless of device speed differences.</td></tr>
+<tr><td class="qnum">25</td><td class="type">Short</td><td class="ans">—</td><td>Three Cs: (1) <strong>Compulsory</strong> (cold) — first access to a block, unavoidable. (2) <strong>Conflict</strong> (collision) — multiple blocks compete for the same line/set. (3) <strong>Capacity</strong> — cache too small to hold all needed blocks.</td></tr>
+<tr><td class="qnum">26</td><td class="type">MCQ</td><td class="ans">B</td><td>Look-through: T<sub>avg</sub> = T<sub>C</sub> + (1&minus;h) &times; T<sub>M</sub>. Cache is checked first; on miss, memory is accessed after.</td></tr>
+<tr><td class="qnum">27</td><td class="type">Short</td><td class="ans">—</td><td>Programmed I/O: CPU busy-waits (polls device status continuously) — wastes CPU cycles. Interrupt-driven I/O: CPU executes other instructions and is interrupted only when device is ready — much better CPU efficiency.</td></tr>
+<tr><td class="qnum">28</td><td class="type">MCQ</td><td class="ans">B</td><td>Hardwired control uses combinational logic circuits and state machines (not stored microinstructions).</td></tr>
+<tr><td class="qnum">29</td><td class="type">MCQ</td><td class="ans">B</td><td>Low-order interleaving places consecutive addresses in different memory modules (round-robin).</td></tr>
+<tr><td class="qnum">30</td><td class="type">Short</td><td class="ans">—</td><td>Any three: Control and timing of data transfer, Communication with the CPU, Communication with external devices, Data buffering, Error detection.</td></tr>
+</table>
+</div><!-- end SET A key -->
+
+</body>
+</html>

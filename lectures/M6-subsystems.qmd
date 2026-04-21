@@ -21,3 +21,9 @@ date: last-modified
 ::: {.notes}
 This module covers external storage systems, disk drive organization, error detection and correction mechanisms including Hamming codes, RAID configurations, and I/O performance evaluation.
 :::
+
+## References
+
+- [Dr. P. Keerthika — Module 6 Reference](../reference/DrPKeerthika-WINSEM2024-25_BCSE205L_TH_VL2024250501395_2025-03-12_Reference-Material-I-Module6.pdf)
+- Patterson & Hennessy — *Computer Organization and Design* (6th ed.), Ch. 5
+- Stallings — *Computer Organization and Architecture* (10th ed.), Ch. 6

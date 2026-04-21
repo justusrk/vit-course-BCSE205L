@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BCSE205L — CAT-2 Answer Key — SET C</title>
+<style>
+  @page { margin: 1.5cm 2cm; size: A4; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 11pt; line-height: 1.5; color: #111; padding: 2cm; }
+  .set { page-break-before: always; }
+  .set:first-child { page-break-before: auto; }
+  .header { text-align: center; border-bottom: 2px solid #c00; padding-bottom: 10px; margin-bottom: 12px; }
+  .header h1 { font-size: 14pt; margin-bottom: 2px; }
+  .header h2 { font-size: 12pt; font-weight: normal; margin-bottom: 2px; }
+  .header .confidential { font-size: 10pt; color: #c00; font-weight: bold; text-transform: uppercase; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
+  th, td { border: 1px solid #999; padding: 5px 8px; text-align: left; font-size: 10.5pt; }
+  th { background: #e8e8e8; font-weight: 700; }
+  td.qnum { text-align: center; font-weight: 700; width: 40px; }
+  td.ans { font-weight: 700; color: #c00; width: 60px; text-align: center; }
+  td.type { width: 50px; text-align: center; font-size: 9pt; color: #555; }
+  .short-ans { font-weight: normal; color: #111; }
+  .section-label { font-weight: bold; font-size: 12pt; margin: 16px 0 8px 0; padding: 4px 8px; background: #f0f0f0; border-left: 4px solid #c00; }
+  @media print {
+    .set { page-break-before: always; }
+    .set:first-child { page-break-before: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== SET C ANSWER KEY ==================== -->
+<div class="set" id="key-c">
+<div class="header">
+  <h1>BCSE205L — CAT-2 Quiz Answer Key</h1>
+  <h2>SET C</h2>
+  <p class="confidential">Confidential — For Instructor Use Only</p>
+</div>
+
+<table>
+<tr><th>#</th><th>Type</th><th>Ans</th><th>Explanation / Model Answer</th></tr>
+<tr><td class="qnum">1</td><td class="type">MCQ</td><td class="ans">C</td><td>FIFO may suffer from Belady's anomaly.</td></tr>
+<tr><td class="qnum">2</td><td class="type">Short</td><td class="ans">—</td><td>Handshaking: sender asserts "data valid" → receiver reads and asserts "acknowledge" → sender de-asserts → receiver de-asserts. Reliable four-step protocol.</td></tr>
+<tr><td class="qnum">3</td><td class="type">MCQ</td><td class="ans">B</td><td>Microprogrammed control uses microinstructions in control memory (ROM).</td></tr>
+<tr><td class="qnum">4</td><td class="type">Short</td><td class="ans">—</td><td>Look-aside: 0.95 &times; 10 + 0.05 &times; 100 = <strong>14.5 ns</strong>.</td></tr>
+<tr><td class="qnum">5</td><td class="type">MCQ</td><td class="ans">B</td><td>Hardwired control uses combinational logic and state machines.</td></tr>
+<tr><td class="qnum">6</td><td class="type">Short</td><td class="ans">—</td><td>Any three: Control/timing, CPU communication, device communication, data buffering, error detection.</td></tr>
+<tr><td class="qnum">7</td><td class="type">MCQ</td><td class="ans">A</td><td>Direct mapping: Cache line = Block address MOD Number of cache lines.</td></tr>
+<tr><td class="qnum">8</td><td class="type">MCQ</td><td class="ans">B</td><td>Interrupt-driven: CPU does other tasks, notified via interrupt when ready.</td></tr>
+<tr><td class="qnum">9</td><td class="type">MCQ</td><td class="ans">D</td><td>Compile is a software step, not an instruction-cycle phase.</td></tr>
+<tr><td class="qnum">10</td><td class="type">MCQ</td><td class="ans">B</td><td>Write-back updates main memory only when dirty line is evicted.</td></tr>
+<tr><td class="qnum">11</td><td class="type">Short</td><td class="ans">—</td><td>Programmed I/O: CPU busy-waits, wastes cycles. Interrupt-driven: CPU does other work, interrupted when ready — much better efficiency.</td></tr>
+<tr><td class="qnum">12</td><td class="type">MCQ</td><td class="ans">B</td><td>Big Endian stores MSB at the lowest address.</td></tr>
+<tr><td class="qnum">13</td><td class="type">Short</td><td class="ans">—</td><td>DMA transfers data directly between I/O and memory without continuous CPU involvement. Advantage: frees CPU.</td></tr>
+<tr><td class="qnum">14</td><td class="type">MCQ</td><td class="ans">C</td><td>MIPS = 2&times;10<sup>8</sup> / (0.5 &times; 10<sup>6</sup>) = 400.</td></tr>
+<tr><td class="qnum">15</td><td class="type">MCQ</td><td class="ans">B</td><td>16 lines / 4-way = 4 sets.</td></tr>
+<tr><td class="qnum">16</td><td class="type">MCQ</td><td class="ans">A</td><td>Programmed I/O keeps CPU busiest — stuck polling the entire transfer.</td></tr>
+<tr><td class="qnum">17</td><td class="type">Short</td><td class="ans">—</td><td>PA = 8 bits, Offset = 3, Index = 3, Tag = 2.</td></tr>
+<tr><td class="qnum">18</td><td class="type">Short</td><td class="ans">—</td><td>MIPS = Instruction Count / (Execution Time &times; 10<sup>6</sup>).</td></tr>
+<tr><td class="qnum">19</td><td class="type">MCQ</td><td class="ans">B</td><td>Cycle stealing — DMA controller borrows bus cycles from CPU.</td></tr>
+<tr><td class="qnum">20</td><td class="type">Short</td><td class="ans">—</td><td>Little Endian: Addr 100 = BE, 101 = BA, 102 = FE, 103 = CA.</td></tr>
+<tr><td class="qnum">21</td><td class="type">MCQ</td><td class="ans">B</td><td>Low-order interleaving places consecutive addresses in different modules.</td></tr>
+<tr><td class="qnum">22</td><td class="type">Short</td><td class="ans">—</td><td>FIFO trace: 1,2,3,4,1,2 → Hits = 0, Misses = 6.</td></tr>
+<tr><td class="qnum">23</td><td class="type">Short</td><td class="ans">—</td><td>ALU: Arithmetic (add, subtract, multiply, divide), Logic (AND, OR, NOT, XOR), Shift, Comparison.</td></tr>
+<tr><td class="qnum">24</td><td class="type">Short</td><td class="ans">—</td><td>Three Cs: (1) Compulsory — first access. (2) Conflict — blocks compete for same line/set. (3) Capacity — cache too small.</td></tr>
+<tr><td class="qnum">25</td><td class="type">MCQ</td><td class="ans">B</td><td>Strobe uses a single control line activated by source or destination.</td></tr>
+<tr><td class="qnum">26</td><td class="type">MCQ</td><td class="ans">C</td><td>Registers are fastest and smallest in the memory hierarchy.</td></tr>
+<tr><td class="qnum">27</td><td class="type">MCQ</td><td class="ans">B</td><td>Programmed I/O: CPU continuously polls device status (busy-waiting).</td></tr>
+<tr><td class="qnum">28</td><td class="type">MCQ</td><td class="ans">B</td><td>Look-through: T<sub>avg</sub> = T<sub>C</sub> + (1&minus;h) &times; T<sub>M</sub>.</td></tr>
+<tr><td class="qnum">29</td><td class="type">MCQ</td><td class="ans">C</td><td>Fully associative: block can go in any available cache line.</td></tr>
+<tr><td class="qnum">30</td><td class="type">MCQ</td><td class="ans">B</td><td>Buffering compensates for speed differences between devices.</td></tr>
+</table>
+</div><!-- end SET C key -->
+
+</body>
+</html>

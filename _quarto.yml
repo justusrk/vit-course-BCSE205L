@@ -10,6 +10,8 @@ project:
     - "reference/Ref-Cache Memory_0503.pdf"
     - "reference/Ref-Memory Interleaving.pdf"
     - reference/Ref-Replacement-Algorithm.pdf
+    - reference/DrPKeerthika-WINSEM2024-25_BCSE205L_TH_VL2024250501395_2025-03-12_Reference-Material-I-Module6.pdf
+    - reference/DrPKeerthika-WINSEM2024-25_BCSE205L_TH_VL2024250501395_2025-04-02_Reference-Material-I-Module7.pdf
   render:
     - index.qmd
     - lectures/*.qmd
@@ -25,6 +27,7 @@ format:
     slide-number: true
     hash-type: number
     center: false
+    scrollable: true
     footer: "BCSE205L — Computer Architecture and Organization | VIT"
     highlight-style: github-dark
     code-overflow: wrap

@@ -26,6 +26,17 @@ format:
 </tbody>
 </table>
 
+## Assignments
+
+<table>
+<thead>
+<tr><th>Assignment</th><th>Coverage</th><th></th></tr>
+</thead>
+<tbody>
+<tr><td>CAT-2 Remedial Assignment</td><td>10 PYQP-based questions across Modules 3, 4, and 5</td><td><a href="assignments/remdial-assignment-cat-2.html">View</a></td></tr>
+</tbody>
+</table>
+
 ## Exam Syllabus
 
 <table>
