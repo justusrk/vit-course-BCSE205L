@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls /Users/justusrk/Workspace/VIT/BCSE205L/reference/Ref-*)",
+      "Bash(quarto render:*)"
+    ]
+  }
+}
